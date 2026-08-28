@@ -9,6 +9,8 @@ var drag: float = 0.98
 
 var main_ref: Node = null
 
+@onready var sprite: Sprite2D = $Sprite2D
+
 func _ready():
 	z_index = 10
 
@@ -24,6 +26,12 @@ func _process(delta):
 		
 		if velocity.length() > max_speed:
 			velocity = velocity.normalized() * max_speed
+		
+		if main_ref and main_ref.audio:
+			main_ref.audio.play_sfx("thrust")
+	else:
+		if main_ref and main_ref.audio:
+			main_ref.audio.stop_thrust()
 	
 	velocity *= drag
 	
@@ -39,6 +47,8 @@ func _process(delta):
 		_fire_weapon()
 
 func _fire_weapon():
+	if main_ref and main_ref.audio:
+		main_ref.audio.play_sfx("fire")
 	var bullet = preload("res://bullet.tscn").instantiate()
 	bullet.position = position
 	bullet.rotation = rotation
@@ -46,15 +56,3 @@ func _fire_weapon():
 	bullet.damage = main_ref.weapon_damage
 	bullet.is_player = true
 	get_parent().add_child(bullet)
-
-func _draw():
-	var points = PackedVector2Array([
-		Vector2(0, -12),
-		Vector2(-8, 12),
-		Vector2(0, 6),
-		Vector2(8, 12)
-	])
-	draw_colored_polygon(points, Color(0.3, 0.6, 0.9))
-	var closed_points = PackedVector2Array(points)
-	closed_points.append(points[0])
-	draw_polyline(closed_points, Color(0.5, 0.8, 1.0), 2.0)

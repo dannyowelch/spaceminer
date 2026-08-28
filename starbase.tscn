@@ -1,6 +1,10 @@
-[gd_scene load_steps=2 format=3 uid="uid://f3g4h5i6j7k8l"]
+[gd_scene load_steps=3 format=3 uid="uid://f3g4h5i6j7k8l"]
 
 [ext_resource type="Script" path="res://starbase.gd" id="1_starbase"]
+[ext_resource type="Texture2D" path="res://sprites/starbase.png" id="2_texture"]
 
 [node name="Starbase" type="Node2D"]
 script = ExtResource("1_starbase")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("2_texture")

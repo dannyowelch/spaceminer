@@ -22,11 +22,21 @@ var starbase = null
 
 @onready var hud = $HUD
 @onready var playfield: Node2D = $Playfield
+@onready var audio: Node = $AudioManager
+
+var dustbelt_music: AudioStream
+var razor_music: AudioStream
+var starbase_music: AudioStream
 
 func _ready():
 	var CargoGridClass = load("res://cargo_grid.gd")
 	cargo_grid = CargoGridClass.new()
 	cargo_grid.initialize(cargo_capacity)
+	
+	dustbelt_music = load("res://audio/music/dustbelt_loop.wav")
+	razor_music = load("res://audio/music/razor_loop.wav")
+	starbase_music = load("res://audio/music/starbase_loop.wav")
+	
 	_start_dust_belt()
 
 func _process(_delta):
@@ -40,6 +50,9 @@ func _process(_delta):
 func _start_dust_belt():
 	mode = Mode.DUST_BELT
 	_clear_playfield()
+	
+	if audio:
+		audio.play_music(dustbelt_music)
 	
 	player_ship = preload("res://ship.tscn").instantiate()
 	player_ship.position = Vector2(640, 360)
@@ -63,6 +76,10 @@ func _start_dock():
 	mode = Mode.DOCK
 	_clear_playfield()
 	
+	if audio:
+		audio.play_music(starbase_music)
+		audio.play_sfx("dock")
+	
 	var dock_ui = preload("res://dock_ui.tscn").instantiate()
 	dock_ui.main_ref = self
 	playfield.add_child(dock_ui)
@@ -70,6 +87,10 @@ func _start_dock():
 func _start_razor_reach():
 	mode = Mode.RAZOR_REACH
 	_clear_playfield()
+	
+	if audio:
+		audio.play_music(razor_music)
+		audio.play_sfx("pirate_sting")
 	
 	player_ship = preload("res://ship.tscn").instantiate()
 	player_ship.position = Vector2(640, 360)
@@ -119,10 +140,16 @@ func try_mine():
 			continue
 		var distance = player_ship.position.distance_to(asteroid.position)
 		if distance < mining_range:
+			if audio:
+				audio.play_sfx("mine")
 			var mined = asteroid.mine(mining_power)
 			if mined > 0:
 				cargo_grid.add_ore(asteroid.rarity, mined)
+				if audio:
+					audio.play_sfx("ore_pickup")
 			if asteroid.ore_remaining <= 0:
+				if audio:
+					audio.play_sfx("asteroid_break")
 				asteroids.erase(asteroid)
 			break
 
@@ -156,6 +183,8 @@ func buy_upgrade(upgrade_type: String, cost: int) -> bool:
 
 func damage_hull(amount: int):
 	hull -= amount
+	if audio:
+		audio.play_sfx("hull_hit")
 	if hull <= 0:
 		_game_over()
 
