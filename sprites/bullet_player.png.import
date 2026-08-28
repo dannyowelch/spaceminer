@@ -2,8 +2,11 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://8b0ec953cc02da4e"
+uid="uid://bcpiv7shguxlu"
 path="res://.godot/imported/bullet_player.png-8b0ec953cc02da4eac9b469c030934f3.ctex"
+metadata={
+"vram_texture": false
+}
 
 [deps]
 

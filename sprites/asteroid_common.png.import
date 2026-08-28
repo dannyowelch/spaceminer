@@ -2,8 +2,11 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://868aa358ac2b5995"
+uid="uid://chuc7rmr2a4u5"
 path="res://.godot/imported/asteroid_common.png-868aa358ac2b5995438c32273fa7d1fe.ctex"
+metadata={
+"vram_texture": false
+}
 
 [deps]
 

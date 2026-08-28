@@ -1,8 +1,8 @@
 # Spaceminer Vertical Slice - Playtest Verification
 
 **Date**: 2026-08-28  
-**Build**: Godot 4.3 Initial Vertical Slice  
-**Test Type**: Automated System Test
+**Build**: Godot 4.3 Vertical Slice with Sprite Integration  
+**Test Type**: Automated System Test + Visual Verification
 
 ## Test Results: ✅ ALL PASSED
 
@@ -82,13 +82,15 @@
 - ✅ Right panel: Credits, Cargo count, Controls
 - ✅ VGA-palette color scheme
 
-### 10. Visual Placeholders
-- ✅ Player ship: Blue triangle (original design)
-- ✅ Pirate ship: Red triangle (original design)
-- ✅ Asteroids: Irregular octagons with rarity colors
-- ✅ Starbase: Circle with cross spokes
-- ✅ Bullets: Colored circles (yellow/red)
-- ✅ All art is original VGA-style placeholder graphics
+### 10. Sprite Integration (Sable's Pack)
+- ✅ Player ship: Cyan miner sprite (32x32 PNG, nose up)
+- ✅ Pirate ship: Brown cutter sprite (32x32 PNG, prow up)
+- ✅ Asteroids: Three rarity sprites (24x24 PNG: gray/brown/teal)
+- ✅ Starbase: Orbital station sprite (48x48 PNG)
+- ✅ Bullets: Plus symbols (8x8 PNG: yellow/red)
+- ✅ Ore icons: Gem sprites for HUD (16x16 PNG: gray/brown/teal)
+- ✅ All sprites use nearest-neighbor filtering (pixel-perfect)
+- ✅ Sprites replace _draw() placeholders completely
 
 ## Game Loop Verification
 
@@ -108,14 +110,22 @@
 - Memory leaks: Minor ObjectDB warnings (expected in headless mode)
 - All game systems responsive
 
+## Sprite Verification
+- ✅ Visual test confirms all sprites load correctly
+- ✅ No _draw() polygon code remains in game objects
+- ✅ Ore icons display in dock UI
+- ✅ Asteroid sprites scale as they're mined
+- ✅ Bullet sprites change based on player/pirate
+
 ## Conclusion
-**Vertical slice is PLAYABLE and meets all requirements.**
+**Vertical slice is PLAYABLE with integrated sprite art.**
 
 The game demonstrates:
 - Fun SC2-style flight feel
-- Satisfying mining loop
+- Satisfying mining loop with visual feedback
 - Meaningful upgrade progression  
 - Combat-or-flee choice in Razor Reach
 - Clean data modeling (ship, cargo, hull, credits properly separated)
+- Professional sprite integration (Sable's VGA pixel art)
 
-Ready for art/audio integration and iteration on game feel.
+Ready for audio integration and gameplay iteration.

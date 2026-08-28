@@ -42,6 +42,8 @@ func _process(delta):
 			fire_timer = fire_cooldown
 
 func _fire_weapon():
+	if main_ref and main_ref.audio:
+		main_ref.audio.play_sfx("fire")
 	var bullet = preload("res://bullet.tscn").instantiate()
 	bullet.position = position
 	bullet.rotation = rotation
@@ -53,4 +55,6 @@ func _fire_weapon():
 func take_damage(amount: int):
 	hull -= amount
 	if hull <= 0:
+		if main_ref and main_ref.audio:
+			main_ref.audio.play_sfx("explosion")
 		queue_free()

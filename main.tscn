@@ -1,7 +1,8 @@
-[gd_scene load_steps=3 format=3 uid="uid://bvq8ixmxl1r5x"]
+[gd_scene load_steps=4 format=3 uid="uid://bvq8ixmxl1r5x"]
 
 [ext_resource type="Script" path="res://main.gd" id="1_1q2w3"]
 [ext_resource type="PackedScene" uid="uid://c5y6z7a8b9c0d" path="res://hud.tscn" id="2_hud"]
+[ext_resource type="PackedScene" path="res://audio_manager.tscn" id="3_audio"]
 
 [node name="Main" type="Node2D"]
 script = ExtResource("1_1q2w3")
@@ -20,3 +21,5 @@ color = Color(0.1, 0.1, 0.15, 1)
 [node name="Playfield" type="Node2D" parent="."]
 
 [node name="HUD" parent="." instance=ExtResource("2_hud")]
+
+[node name="AudioManager" parent="." instance=ExtResource("3_audio")]

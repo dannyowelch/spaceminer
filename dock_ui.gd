@@ -45,19 +45,36 @@ func _update_display():
 
 func _on_sell_pressed():
 	var earned = main_ref.sell_all_ore()
+	if main_ref.audio:
+		main_ref.audio.play_sfx("sell")
 	_update_display()
 
 func _on_upgrade1_pressed():
 	if main_ref.buy_upgrade("mining_beam", 150):
+		if main_ref.audio:
+			main_ref.audio.play_sfx("ui_ok")
 		_update_display()
+	else:
+		if main_ref.audio:
+			main_ref.audio.play_sfx("ui_deny")
 
 func _on_upgrade2_pressed():
 	if main_ref.buy_upgrade("cargo_hold", 200):
+		if main_ref.audio:
+			main_ref.audio.play_sfx("ui_ok")
 		_update_display()
+	else:
+		if main_ref.audio:
+			main_ref.audio.play_sfx("ui_deny")
 
 func _on_upgrade3_pressed():
 	if main_ref.buy_upgrade("weapon", 300):
+		if main_ref.audio:
+			main_ref.audio.play_sfx("ui_ok")
 		_update_display()
+	else:
+		if main_ref.audio:
+			main_ref.audio.play_sfx("ui_deny")
 
 func _on_continue_pressed():
 	main_ref._start_razor_reach()

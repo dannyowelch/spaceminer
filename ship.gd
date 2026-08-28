@@ -26,6 +26,12 @@ func _process(delta):
 		
 		if velocity.length() > max_speed:
 			velocity = velocity.normalized() * max_speed
+		
+		if main_ref and main_ref.audio:
+			main_ref.audio.play_sfx("thrust")
+	else:
+		if main_ref and main_ref.audio:
+			main_ref.audio.stop_thrust()
 	
 	velocity *= drag
 	
@@ -41,6 +47,8 @@ func _process(delta):
 		_fire_weapon()
 
 func _fire_weapon():
+	if main_ref and main_ref.audio:
+		main_ref.audio.play_sfx("fire")
 	var bullet = preload("res://bullet.tscn").instantiate()
 	bullet.position = position
 	bullet.rotation = rotation
