@@ -1,0 +1,66 @@
+[gd_scene load_steps=2 format=3 uid="uid://c5y6z7a8b9c0d"]
+
+[ext_resource type="Script" path="res://hud.gd" id="1_hud"]
+
+[node name="HUD" type="CanvasLayer"]
+script = ExtResource("1_hud")
+
+[node name="LeftPanel" type="VBoxContainer" parent="."]
+offset_left = 20.0
+offset_top = 20.0
+offset_right = 260.0
+offset_bottom = 700.0
+
+[node name="Title" type="Label" parent="LeftPanel"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.7, 0.7, 0.8, 1)
+theme_override_font_sizes/font_size = 24
+text = "SPACEMINER"
+
+[node name="Spacer1" type="Control" parent="LeftPanel"]
+custom_minimum_size = Vector2(0, 20)
+layout_mode = 2
+
+[node name="HullLabel" type="Label" parent="LeftPanel"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.8, 0.8, 0.9, 1)
+theme_override_font_sizes/font_size = 18
+text = "HULL: ■■■■■■■■■■"
+
+[node name="FuelLabel" type="Label" parent="LeftPanel"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.8, 0.8, 0.9, 1)
+theme_override_font_sizes/font_size = 18
+text = "FUEL: 100/100"
+
+[node name="RightPanel" type="VBoxContainer" parent="."]
+offset_left = 1020.0
+offset_top = 20.0
+offset_right = 1260.0
+offset_bottom = 700.0
+
+[node name="CreditsLabel" type="Label" parent="RightPanel"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.8, 0.8, 0.9, 1)
+theme_override_font_sizes/font_size = 18
+text = "CR: 0"
+
+[node name="CargoLabel" type="Label" parent="RightPanel"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.8, 0.8, 0.9, 1)
+theme_override_font_sizes/font_size = 18
+text = "CARGO: 0"
+
+[node name="Spacer2" type="Control" parent="RightPanel"]
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 2
+
+[node name="ControlsLabel" type="Label" parent="RightPanel"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.6, 0.6, 0.7, 1)
+theme_override_font_sizes/font_size = 14
+text = "CONTROLS:
+A/D - Rotate
+W - Thrust
+SPACE - Mine/Fire
+E - Dock"
