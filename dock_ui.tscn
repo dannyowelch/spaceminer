@@ -30,12 +30,22 @@ layout_mode = 1
 anchors_preset = 10
 anchor_right = 1.0
 offset_top = 20.0
-offset_bottom = 100.0
+offset_bottom = 60.0
 grow_horizontal = 2
 theme_override_colors/font_color = Color(0.8, 0.8, 0.9, 1)
 theme_override_font_sizes/font_size = 20
 text = "STARBASE DOCK"
 horizontal_alignment = 1
+
+[node name="CargoDisplay" type="Control" parent="Panel"]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_top = 70.0
+offset_left = 50.0
+offset_right = -50.0
+offset_bottom = 120.0
+grow_horizontal = 2
 
 [node name="SellButton" type="Button" parent="Panel"]
 layout_mode = 1

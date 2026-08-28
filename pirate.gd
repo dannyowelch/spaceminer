@@ -12,6 +12,8 @@ var main_ref: Node = null
 var fire_timer: float = 0
 var fire_cooldown: float = 1.5
 
+@onready var sprite: Sprite2D = $Sprite2D
+
 func _ready():
 	z_index = 10
 
@@ -52,16 +54,3 @@ func take_damage(amount: int):
 	hull -= amount
 	if hull <= 0:
 		queue_free()
-	queue_redraw()
-
-func _draw():
-	var points = PackedVector2Array([
-		Vector2(0, -10),
-		Vector2(-10, 8),
-		Vector2(0, 4),
-		Vector2(10, 8)
-	])
-	draw_colored_polygon(points, Color(0.8, 0.3, 0.2))
-	var closed_points = PackedVector2Array(points)
-	closed_points.append(points[0])
-	draw_polyline(closed_points, Color(1.0, 0.5, 0.3), 2.0)

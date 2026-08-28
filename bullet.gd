@@ -6,8 +6,15 @@ var damage: int = 1
 var lifetime: float = 2.0
 var is_player: bool = true
 
+@onready var sprite: Sprite2D = $Sprite2D
+
 func _ready():
 	z_index = 15
+	if sprite:
+		if is_player:
+			sprite.texture = load("res://sprites/bullet_player.png")
+		else:
+			sprite.texture = load("res://sprites/bullet_pirate.png")
 
 func _process(delta):
 	position += velocity * delta
@@ -42,7 +49,3 @@ func _check_collisions():
 						parent.get_parent().damage_hull(damage)
 						queue_free()
 						return
-
-func _draw():
-	var color = Color(1.0, 1.0, 0.3) if is_player else Color(1.0, 0.3, 0.2)
-	draw_circle(Vector2.ZERO, 3, color)

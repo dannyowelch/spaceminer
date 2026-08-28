@@ -4,8 +4,21 @@ extends Node2D
 var ore_remaining: int = 30
 var rarity: String = "common"
 
+@onready var sprite: Sprite2D = $Sprite2D
+
 func _ready():
 	z_index = 5
+	_update_sprite()
+
+func _update_sprite():
+	if sprite:
+		match rarity:
+			"common":
+				sprite.texture = load("res://sprites/asteroid_common.png")
+			"uncommon":
+				sprite.texture = load("res://sprites/asteroid_uncommon.png")
+			"rare":
+				sprite.texture = load("res://sprites/asteroid_rare.png")
 
 func mine(power: int) -> int:
 	var mined = mini(power, ore_remaining)
@@ -13,32 +26,7 @@ func mine(power: int) -> int:
 	if ore_remaining <= 0:
 		queue_free()
 	else:
-		queue_redraw()
+		var scale_factor = 0.5 + (ore_remaining / 60.0)
+		if sprite:
+			sprite.scale = Vector2(scale_factor, scale_factor)
 	return mined
-
-func _draw():
-	var size = 10 + (ore_remaining * 0.5)
-	var color: Color
-	match rarity:
-		"common":
-			color = Color(0.6, 0.6, 0.6)
-		"uncommon":
-			color = Color(0.7, 0.5, 0.3)
-		"rare":
-			color = Color(0.3, 0.7, 0.5)
-	
-	var points = PackedVector2Array([
-		Vector2(-size, -size * 0.7),
-		Vector2(-size * 0.5, -size),
-		Vector2(size * 0.6, -size * 0.8),
-		Vector2(size, -size * 0.2),
-		Vector2(size * 0.7, size * 0.6),
-		Vector2(size * 0.2, size),
-		Vector2(-size * 0.6, size * 0.8),
-		Vector2(-size * 0.9, size * 0.3)
-	])
-	
-	draw_colored_polygon(points, color)
-	var closed_points = PackedVector2Array(points)
-	closed_points.append(points[0])
-	draw_polyline(closed_points, color.lightened(0.2), 1.5)
