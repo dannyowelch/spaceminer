@@ -31,6 +31,8 @@ var razor_music: AudioStream
 var starbase_music: AudioStream
 
 func _ready():
+	Input.set_mouse_mode(Input.MOUSE_MODE_HIDDEN)
+	
 	var CargoGridClass = load("res://cargo_grid.gd")
 	cargo_grid = CargoGridClass.new()
 	cargo_grid.initialize(cargo_capacity)
@@ -157,23 +159,33 @@ func try_mine():
 	if mode != Mode.DUST_BELT or not player_ship:
 		return
 	
+	var scoop_pos = player_ship.get_scoop_position()
+	var facing = Vector2(cos(player_ship.rotation - PI/2), sin(player_ship.rotation - PI/2))
+	var cone_angle = deg_to_rad(30)
+	
 	for asteroid in asteroids:
 		if not is_instance_valid(asteroid):
 			continue
-		var distance = player_ship.position.distance_to(asteroid.position)
+		
+		var to_asteroid = asteroid.position - scoop_pos
+		var distance = to_asteroid.length()
+		
 		if distance < mining_range:
-			if audio:
-				audio.play_sfx("mine")
-			var mined = asteroid.mine(mining_power)
-			if mined > 0:
-				cargo_grid.add_ore(asteroid.rarity, mined)
+			var angle_to_asteroid = to_asteroid.normalized().angle_to(facing)
+			
+			if abs(angle_to_asteroid) < cone_angle:
 				if audio:
-					audio.play_sfx("ore_pickup")
-			if asteroid.ore_remaining <= 0:
-				if audio:
-					audio.play_sfx("asteroid_break")
-				asteroids.erase(asteroid)
-			break
+					audio.play_sfx("mine")
+				var mined = asteroid.mine(mining_power)
+				if mined > 0:
+					cargo_grid.add_ore(asteroid.rarity, mined)
+					if audio:
+						audio.play_sfx("ore_pickup")
+				if asteroid.ore_remaining <= 0:
+					if audio:
+						audio.play_sfx("asteroid_break")
+					asteroids.erase(asteroid)
+				break
 
 func sell_all_ore() -> int:
 	var total = 0

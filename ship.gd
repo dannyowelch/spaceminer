@@ -46,11 +46,16 @@ func _process(delta):
 	if Input.is_action_just_pressed("fire") and main_ref and main_ref.has_weapon:
 		_fire_weapon()
 
+func get_scoop_position() -> Vector2:
+	var facing = Vector2(cos(rotation - PI/2), sin(rotation - PI/2))
+	var scoop_offset = 64.0
+	return position + facing * scoop_offset
+
 func _fire_weapon():
 	if main_ref and main_ref.audio:
 		main_ref.audio.play_sfx("fire")
 	var bullet = preload("res://bullet.tscn").instantiate()
-	bullet.position = position
+	bullet.position = get_scoop_position()
 	bullet.rotation = rotation
 	bullet.velocity = Vector2(cos(rotation - PI/2), sin(rotation - PI/2)) * 500 + velocity
 	bullet.damage = main_ref.weapon_damage
