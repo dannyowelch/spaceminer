@@ -19,31 +19,3 @@ z_index = 101
 
 [node name="CargoSlots" type="Node2D" parent="."]
 z_index = 101
-
-[node name="CreditsCover" type="ColorRect" parent="."]
-z_index = 101
-offset_left = 1028.0
-offset_top = 0.0
-offset_right = 1212.0
-offset_bottom = 53.0
-color = Color(0.06, 0.08, 0.15, 1)
-
-[node name="CreditsLabel" type="Label" parent="."]
-z_index = 102
-offset_left = 1030.0
-offset_top = 8.0
-offset_right = 1210.0
-offset_bottom = 28.0
-theme_override_colors/font_color = Color(1, 0.9, 0.3, 1)
-theme_override_font_sizes/font_size = 16
-text = "CREDITS"
-
-[node name="CreditsValue" type="Label" parent="."]
-z_index = 102
-offset_left = 1030.0
-offset_top = 28.0
-offset_right = 1210.0
-offset_bottom = 50.0
-theme_override_colors/font_color = Color(1, 0.9, 0.3, 1)
-theme_override_font_sizes/font_size = 18
-text = "0000000"
