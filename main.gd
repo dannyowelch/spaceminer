@@ -53,11 +53,7 @@ func _ready():
 	_start_dust_belt()
 
 func _create_tiled_starfield():
-	var starfield_path = "res://sprites/starfield_tile.png"
-	if not FileAccess.file_exists(starfield_path):
-		starfield_path = "res://sprites/starfield.png"
-	
-	var starfield_img = Image.load_from_file(starfield_path)
+	var starfield_img = Image.load_from_file("res://sprites/starfield_tile.png")
 	if starfield_img == null:
 		push_error("Failed to load starfield")
 		return
@@ -170,6 +166,7 @@ func _start_dust_belt():
 			)
 			asteroid.position = clump_center + offset
 			asteroid.rarity = _random_rarity()
+			asteroid.size = _random_size()
 			asteroid.add_to_group("asteroid")
 			playfield.add_child(asteroid)
 			asteroids.append(asteroid)
@@ -249,7 +246,7 @@ func try_mine():
 		if not is_instance_valid(asteroid):
 			continue
 		
-		var hit = _line_intersects_circle(scoop_pos, beam_end, asteroid.position, 40.0)
+		var hit = _line_intersects_circle(scoop_pos, beam_end, asteroid.position, asteroid.get_radius())
 		if hit:
 			var distance = scoop_pos.distance_to(asteroid.position)
 			if distance < closest_distance:
@@ -335,3 +332,12 @@ func _random_rarity() -> String:
 		return "uncommon"
 	else:
 		return "rare"
+
+func _random_size() -> String:
+	var roll = randf()
+	if roll < 0.4:
+		return "small"
+	elif roll < 0.8:
+		return "medium"
+	else:
+		return "large"

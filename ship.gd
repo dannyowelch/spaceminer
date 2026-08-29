@@ -69,7 +69,7 @@ func _process(delta):
 
 func get_scoop_position() -> Vector2:
 	var facing = Vector2(cos(rotation - PI/2), sin(rotation - PI/2))
-	var scoop_offset = 64.0
+	var scoop_offset = 32.0
 	return position + facing * scoop_offset
 
 func get_facing() -> Vector2:
@@ -78,8 +78,8 @@ func get_facing() -> Vector2:
 func _update_mining_beam():
 	mining_beam.visible = true
 	mining_beam.clear_points()
-	mining_beam.add_point(Vector2(0, -64))
-	mining_beam.add_point(Vector2(0, -184))
+	mining_beam.add_point(Vector2(0, -32))
+	mining_beam.add_point(Vector2(0, -152))
 
 func _fire_weapon():
 	if main_ref and main_ref.audio:
