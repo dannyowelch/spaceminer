@@ -42,6 +42,9 @@ func _ready():
 	_start_dust_belt()
 
 func _process(_delta):
+	if player_ship and camera:
+		camera.position = player_ship.position
+	
 	if mode == Mode.DUST_BELT:
 		_check_starbase_proximity()
 	elif mode == Mode.RAZOR_REACH:
@@ -82,10 +85,10 @@ func _start_dust_belt():
 	starbase.position = Vector2(480, 180)
 	playfield.add_child(starbase)
 	
-	for i in range(15):
+	for i in range(30):
 		var asteroid = preload("res://asteroid.tscn").instantiate()
 		var angle = randf() * TAU
-		var distance = randf_range(200, 500)
+		var distance = randf_range(150, 800)
 		asteroid.position = Vector2(480, 360) + Vector2(cos(angle), sin(angle)) * distance
 		asteroid.rarity = _random_rarity()
 		playfield.add_child(asteroid)

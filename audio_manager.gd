@@ -3,7 +3,7 @@ extends Node
 var music_bus_idx: int
 var current_music: AudioStreamPlayer
 var next_music: AudioStreamPlayer
-var crossfade_time: float = 0.4
+var crossfade_time: float = 0.8
 var crossfade_timer: float = 0.0
 var is_crossfading: bool = false
 var duck_amount: float = -3.0
