@@ -47,8 +47,16 @@ func _process(delta):
 	
 	position += velocity * delta
 	
-	position.x = clampf(position.x, 50, 1400)
-	position.y = clampf(position.y, 50, 1000)
+	if main_ref:
+		if position.x < 0:
+			position.x += main_ref.WORLD_WIDTH
+		elif position.x > main_ref.WORLD_WIDTH:
+			position.x -= main_ref.WORLD_WIDTH
+		
+		if position.y < 0:
+			position.y += main_ref.WORLD_HEIGHT
+		elif position.y > main_ref.WORLD_HEIGHT:
+			position.y -= main_ref.WORLD_HEIGHT
 	
 	if Input.is_action_pressed("mine") and main_ref:
 		_update_mining_beam()

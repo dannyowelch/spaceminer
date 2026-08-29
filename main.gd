@@ -20,7 +20,11 @@ var asteroids: Array = []
 var pirate = null
 var starbase = null
 
-@onready var hud = $VGA_HUD
+const WORLD_WIDTH: float = 5280.0
+const WORLD_HEIGHT: float = 4000.0
+const SCANNER_RANGE: float = 900.0
+
+@onready var hud = $HUD_1080
 @onready var playfield: Node2D = $PlayfieldClip/SubViewport/Playfield
 @onready var camera: Camera2D = $PlayfieldClip/SubViewport/Camera2D
 @onready var audio: Node = $AudioManager
@@ -71,8 +75,23 @@ func _process(_delta):
 			sector_name = "RAZOR REACH"
 	
 	if hud:
+		hud.main_ref = self
 		hud.update_display(hull, max_hull, fuel, max_fuel, credits, sector_name)
 		hud.update_cargo(cargo_grid)
+		
+		if player_ship and (mode == Mode.DUST_BELT or mode == Mode.RAZOR_REACH):
+			var world_objects = []
+			if starbase:
+				world_objects.append(starbase)
+			if planet:
+				world_objects.append(planet)
+			for asteroid in asteroids:
+				if is_instance_valid(asteroid):
+					world_objects.append(asteroid)
+			if pirate:
+				world_objects.append(pirate)
+			
+			hud.update_radar(player_ship.position, world_objects, SCANNER_RANGE)
 
 func _start_dust_belt():
 	mode = Mode.DUST_BELT
@@ -90,27 +109,45 @@ func _start_dust_belt():
 	else:
 		planet.texture = ImageTexture.create_from_image(planet_img)
 	
-	planet.position = Vector2(150, 360)
+	planet.position = Vector2(500, 2000)
 	planet.z_index = -5
+	planet.add_to_group("planet")
 	playfield.add_child(planet)
 	
 	player_ship = preload("res://ship.tscn").instantiate()
-	player_ship.position = Vector2(480, 360)
+	player_ship.position = Vector2(WORLD_WIDTH / 2, WORLD_HEIGHT / 2)
 	player_ship.main_ref = self
 	playfield.add_child(player_ship)
 	
 	starbase = preload("res://starbase.tscn").instantiate()
-	starbase.position = Vector2(480, 180)
+	starbase.position = Vector2(WORLD_WIDTH / 2, 1200)
+	starbase.add_to_group("station")
 	playfield.add_child(starbase)
 	
-	for i in range(30):
-		var asteroid = preload("res://asteroid.tscn").instantiate()
-		var angle = randf() * TAU
-		var distance = randf_range(150, 800)
-		asteroid.position = Vector2(480, 360) + Vector2(cos(angle), sin(angle)) * distance
-		asteroid.rarity = _random_rarity()
-		playfield.add_child(asteroid)
-		asteroids.append(asteroid)
+	var num_clumps = randi_range(4, 6)
+	var asteroids_per_clump = 8
+	
+	for clump_idx in range(num_clumps):
+		var clump_center = Vector2(
+			randf_range(800, WORLD_WIDTH - 800),
+			randf_range(800, WORLD_HEIGHT - 800)
+		)
+		
+		var dist_to_spawn = clump_center.distance_to(player_ship.position)
+		if dist_to_spawn < 600:
+			continue
+		
+		for i in range(asteroids_per_clump):
+			var asteroid = preload("res://asteroid.tscn").instantiate()
+			var offset = Vector2(
+				randf_range(-300, 300),
+				randf_range(-300, 300)
+			)
+			asteroid.position = clump_center + offset
+			asteroid.rarity = _random_rarity()
+			asteroid.add_to_group("asteroid")
+			playfield.add_child(asteroid)
+			asteroids.append(asteroid)
 
 func _start_dock():
 	mode = Mode.DOCK
@@ -133,13 +170,14 @@ func _start_razor_reach():
 		audio.play_sfx("pirate_sting")
 	
 	player_ship = preload("res://ship.tscn").instantiate()
-	player_ship.position = Vector2(480, 360)
+	player_ship.position = Vector2(WORLD_WIDTH / 2, WORLD_HEIGHT / 2)
 	player_ship.main_ref = self
 	playfield.add_child(player_ship)
 	
 	pirate = preload("res://pirate.tscn").instantiate()
-	pirate.position = Vector2(480, 200)
+	pirate.position = Vector2(WORLD_WIDTH / 2, 1200)
 	pirate.main_ref = self
+	pirate.add_to_group("enemy")
 	playfield.add_child(pirate)
 
 func _clear_playfield():

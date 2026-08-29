@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" path="res://main.gd" id="1_1q2w3"]
 [ext_resource type="Texture2D" path="res://sprites/starfield.png" id="2_starfield"]
-[ext_resource type="PackedScene" path="res://vga_hud.tscn" id="3_hud"]
+[ext_resource type="PackedScene" path="res://hud_1080.tscn" id="3_hud"]
 [ext_resource type="PackedScene" path="res://audio_manager.tscn" id="4_audio"]
 
 [node name="Main" type="Node2D"]
@@ -10,25 +10,26 @@ script = ExtResource("1_1q2w3")
 
 [node name="Starfield" type="Sprite2D" parent="."]
 texture_filter = 1
-position = Vector2(640, 360)
+position = Vector2(960, 540)
 texture = ExtResource("2_starfield")
 
 [node name="PlayfieldClip" type="SubViewportContainer" parent="."]
-offset_left = 160.0
-offset_right = 1120.0
-offset_bottom = 720.0
+offset_left = 280.0
+offset_top = 40.0
+offset_right = 1600.0
+offset_bottom = 1040.0
 stretch = true
 
 [node name="SubViewport" type="SubViewport" parent="PlayfieldClip"]
 transparent_bg = true
-size = Vector2i(960, 720)
+size = Vector2i(1320, 1000)
 render_target_update_mode = 4
 
 [node name="Camera2D" type="Camera2D" parent="PlayfieldClip/SubViewport"]
-position = Vector2(480, 360)
+position = Vector2(660, 500)
 
 [node name="Playfield" type="Node2D" parent="PlayfieldClip/SubViewport"]
 
-[node name="VGA_HUD" parent="." instance=ExtResource("3_hud")]
+[node name="HUD_1080" parent="." instance=ExtResource("3_hud")]
 
 [node name="AudioManager" parent="." instance=ExtResource("4_audio")]
