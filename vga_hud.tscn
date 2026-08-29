@@ -1,0 +1,49 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://vga_hud.gd" id="1"]
+[ext_resource type="Texture2D" path="res://ui/hud_overlay.png" id="2"]
+
+[sub_resource type="LabelSettings" id="1"]
+font_color = Color(1, 0.9, 0.3, 1)
+outline_size = 2
+outline_color = Color(0, 0, 0, 1)
+
+[sub_resource type="LabelSettings" id="2"]
+font_color = Color(0.3, 0.9, 0.9, 1)
+outline_size = 2
+outline_color = Color(0, 0, 0, 1)
+
+[node name="VGA_HUD" type="CanvasLayer"]
+layer = 100
+script = ExtResource("1")
+
+[node name="Overlay" type="Sprite2D" parent="."]
+z_index = 100
+position = Vector2(640, 360)
+texture = ExtResource("2")
+
+[node name="HullPips" type="Node2D" parent="."]
+z_index = 101
+
+[node name="CargoSlots" type="Node2D" parent="."]
+z_index = 101
+
+[node name="CreditsLabel" type="Label" parent="."]
+z_index = 101
+offset_left = 1135.0
+offset_top = 20.0
+offset_right = 1265.0
+offset_bottom = 50.0
+theme_override_font_sizes/font_size = 24
+text = "0000000"
+label_settings = SubResource("1")
+
+[node name="SectorLabel" type="Label" parent="."]
+z_index = 101
+offset_left = 1135.0
+offset_top = 440.0
+offset_right = 1265.0
+offset_bottom = 480.0
+theme_override_font_sizes/font_size = 18
+text = "DUST BELT"
+label_settings = SubResource("2")

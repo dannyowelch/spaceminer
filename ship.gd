@@ -37,8 +37,8 @@ func _process(delta):
 	
 	position += velocity * delta
 	
-	position.x = clampf(position.x, 280, 1000)
-	position.y = clampf(position.y, 0, 720)
+	position.x = clampf(position.x, 50, 910)
+	position.y = clampf(position.y, 50, 670)
 	
 	if Input.is_action_pressed("mine") and main_ref:
 		main_ref.try_mine()
