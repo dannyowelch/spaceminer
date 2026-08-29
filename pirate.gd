@@ -16,6 +16,14 @@ var fire_cooldown: float = 1.5
 
 func _ready():
 	z_index = 10
+	
+	var img = Image.load_from_file("res://sprites/pirate.png")
+	if img == null:
+		push_error("Failed to load pirate.png")
+	else:
+		var texture = ImageTexture.create_from_image(img)
+		sprite.texture = texture
+		sprite.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 
 func _process(delta):
 	if main_ref and main_ref.player_ship:

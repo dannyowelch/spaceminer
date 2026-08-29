@@ -12,13 +12,22 @@ func _ready():
 
 func _update_sprite():
 	if sprite:
+		var texture_path = ""
 		match rarity:
 			"common":
-				sprite.texture = load("res://sprites/asteroid_common.png")
+				texture_path = "res://sprites/asteroid_common.png"
 			"uncommon":
-				sprite.texture = load("res://sprites/asteroid_uncommon.png")
+				texture_path = "res://sprites/asteroid_uncommon.png"
 			"rare":
-				sprite.texture = load("res://sprites/asteroid_rare.png")
+				texture_path = "res://sprites/asteroid_rare.png"
+		
+		var img = Image.load_from_file(texture_path)
+		if img == null:
+			push_error("Failed to load " + texture_path)
+		else:
+			var texture = ImageTexture.create_from_image(img)
+			sprite.texture = texture
+			sprite.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 
 func mine(power: int) -> int:
 	var mined = mini(power, ore_remaining)

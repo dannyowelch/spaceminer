@@ -10,11 +10,25 @@ var ore_icons: Dictionary = {}
 @onready var sector_label: Label = $SectorLabel
 
 func _ready():
-	ore_icons = {
-		"common": load("res://sprites/ore_common.png"),
-		"uncommon": load("res://sprites/ore_uncommon.png"),
-		"rare": load("res://sprites/ore_rare.png")
-	}
+	var overlay_img = Image.load_from_file("res://sprites/hud_overlay.png")
+	if overlay_img == null:
+		push_error("Failed to load hud_overlay.png")
+	else:
+		var overlay_texture = ImageTexture.create_from_image(overlay_img)
+		overlay.texture = overlay_texture
+		overlay.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	
+	var ore_common_img = Image.load_from_file("res://sprites/ore_common.png")
+	var ore_uncommon_img = Image.load_from_file("res://sprites/ore_uncommon.png")
+	var ore_rare_img = Image.load_from_file("res://sprites/ore_rare.png")
+	
+	ore_icons = {}
+	if ore_common_img:
+		ore_icons["common"] = ImageTexture.create_from_image(ore_common_img)
+	if ore_uncommon_img:
+		ore_icons["uncommon"] = ImageTexture.create_from_image(ore_uncommon_img)
+	if ore_rare_img:
+		ore_icons["rare"] = ImageTexture.create_from_image(ore_rare_img)
 
 func update_display(hull: int, max_hull: int, _fuel: int, _max_fuel: int, credits: int, sector_name: String):
 	_update_hull_pips(hull, max_hull)

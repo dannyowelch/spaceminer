@@ -15,6 +15,14 @@ var mining_beam_length: float = 120.0
 
 func _ready():
 	z_index = 10
+	
+	var img = Image.load_from_file("res://sprites/ship.png")
+	if img == null:
+		push_error("Failed to load ship.png")
+	else:
+		var texture = ImageTexture.create_from_image(img)
+		sprite.texture = texture
+		sprite.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 
 func _process(delta):
 	if Input.is_action_pressed("rotate_left"):

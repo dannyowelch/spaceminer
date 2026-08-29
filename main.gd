@@ -24,6 +24,7 @@ var starbase = null
 @onready var playfield: Node2D = $PlayfieldClip/SubViewport/Playfield
 @onready var camera: Camera2D = $PlayfieldClip/SubViewport/Camera2D
 @onready var audio: Node = $AudioManager
+@onready var starfield: Sprite2D = $Starfield
 var planet: Sprite2D
 
 var dustbelt_music: AudioStream
@@ -32,6 +33,14 @@ var starbase_music: AudioStream
 
 func _ready():
 	Input.set_mouse_mode(Input.MOUSE_MODE_HIDDEN)
+	
+	var starfield_img = Image.load_from_file("res://sprites/starfield.png")
+	if starfield_img == null:
+		push_error("Failed to load starfield.png")
+	else:
+		var starfield_texture = ImageTexture.create_from_image(starfield_img)
+		starfield.texture = starfield_texture
+		starfield.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 	
 	var CargoGridClass = load("res://cargo_grid.gd")
 	cargo_grid = CargoGridClass.new()
@@ -74,7 +83,13 @@ func _start_dust_belt():
 	
 	planet = Sprite2D.new()
 	planet.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
-	planet.texture = load("res://sprites/planet.png")
+	
+	var planet_img = Image.load_from_file("res://sprites/planet.png")
+	if planet_img == null:
+		push_error("Failed to load planet.png")
+	else:
+		planet.texture = ImageTexture.create_from_image(planet_img)
+	
 	planet.position = Vector2(150, 360)
 	planet.z_index = -5
 	playfield.add_child(planet)
