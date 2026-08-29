@@ -160,32 +160,52 @@ func try_mine():
 		return
 	
 	var scoop_pos = player_ship.get_scoop_position()
-	var facing = Vector2(cos(player_ship.rotation - PI/2), sin(player_ship.rotation - PI/2))
-	var cone_angle = deg_to_rad(30)
+	var facing = player_ship.get_facing()
+	var beam_end = scoop_pos + facing * mining_range
+	
+	var closest_asteroid = null
+	var closest_distance = INF
 	
 	for asteroid in asteroids:
 		if not is_instance_valid(asteroid):
 			continue
 		
-		var to_asteroid = asteroid.position - scoop_pos
-		var distance = to_asteroid.length()
-		
-		if distance < mining_range:
-			var angle_to_asteroid = to_asteroid.normalized().angle_to(facing)
-			
-			if abs(angle_to_asteroid) < cone_angle:
-				if audio:
-					audio.play_sfx("mine")
-				var mined = asteroid.mine(mining_power)
-				if mined > 0:
-					cargo_grid.add_ore(asteroid.rarity, mined)
-					if audio:
-						audio.play_sfx("ore_pickup")
-				if asteroid.ore_remaining <= 0:
-					if audio:
-						audio.play_sfx("asteroid_break")
-					asteroids.erase(asteroid)
-				break
+		var hit = _line_intersects_circle(scoop_pos, beam_end, asteroid.position, 40.0)
+		if hit:
+			var distance = scoop_pos.distance_to(asteroid.position)
+			if distance < closest_distance:
+				closest_distance = distance
+				closest_asteroid = asteroid
+	
+	if closest_asteroid:
+		if audio:
+			audio.play_sfx("mine")
+		var mined = closest_asteroid.mine(mining_power)
+		if mined > 0:
+			cargo_grid.add_ore(closest_asteroid.rarity, mined)
+			if audio:
+				audio.play_sfx("ore_pickup")
+		if closest_asteroid.ore_remaining <= 0:
+			if audio:
+				audio.play_sfx("asteroid_break")
+			asteroids.erase(closest_asteroid)
+
+func _line_intersects_circle(line_start: Vector2, line_end: Vector2, circle_pos: Vector2, circle_radius: float) -> bool:
+	var d = line_end - line_start
+	var f = line_start - circle_pos
+	
+	var a = d.dot(d)
+	var b = 2 * f.dot(d)
+	var c = f.dot(f) - circle_radius * circle_radius
+	
+	var discriminant = b * b - 4 * a * c
+	if discriminant < 0:
+		return false
+	
+	var t1 = (-b - sqrt(discriminant)) / (2 * a)
+	var t2 = (-b + sqrt(discriminant)) / (2 * a)
+	
+	return (t1 >= 0 and t1 <= 1) or (t2 >= 0 and t2 <= 1)
 
 func sell_all_ore() -> int:
 	var total = 0

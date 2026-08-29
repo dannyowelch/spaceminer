@@ -8,8 +8,10 @@ var max_speed: float = 400.0
 var drag: float = 0.98
 
 var main_ref: Node = null
+var mining_beam_length: float = 120.0
 
 @onready var sprite: Sprite2D = $Sprite2D
+@onready var mining_beam: Line2D = $MiningBeam
 
 func _ready():
 	z_index = 10
@@ -41,7 +43,10 @@ func _process(delta):
 	position.y = clampf(position.y, 50, 1000)
 	
 	if Input.is_action_pressed("mine") and main_ref:
+		_update_mining_beam()
 		main_ref.try_mine()
+	else:
+		mining_beam.visible = false
 	
 	if Input.is_action_just_pressed("fire") and main_ref and main_ref.has_weapon:
 		_fire_weapon()
@@ -50,6 +55,17 @@ func get_scoop_position() -> Vector2:
 	var facing = Vector2(cos(rotation - PI/2), sin(rotation - PI/2))
 	var scoop_offset = 64.0
 	return position + facing * scoop_offset
+
+func get_facing() -> Vector2:
+	return Vector2(cos(rotation - PI/2), sin(rotation - PI/2))
+
+func _update_mining_beam():
+	mining_beam.visible = true
+	var scoop_local = get_facing() * 64.0
+	var beam_end_local = scoop_local + get_facing() * mining_beam_length
+	mining_beam.clear_points()
+	mining_beam.add_point(scoop_local)
+	mining_beam.add_point(beam_end_local)
 
 func _fire_weapon():
 	if main_ref and main_ref.audio:
