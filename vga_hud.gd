@@ -1,13 +1,11 @@
 extends CanvasLayer
 
 var main_ref: Node = null
-var ore_icons: Dictionary = {}
+var cargo_icons: Dictionary = {}
 
 @onready var overlay: Sprite2D = $Overlay
 @onready var hull_pips: Node2D = $HullPips
 @onready var cargo_slots: Node2D = $CargoSlots
-@onready var credits_label: Label = $CreditsLabel
-@onready var sector_label: Label = $SectorLabel
 
 func _ready():
 	var overlay_img = Image.load_from_file("res://sprites/hud_overlay.png")
@@ -18,31 +16,29 @@ func _ready():
 		overlay.texture = overlay_texture
 		overlay.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 	
-	var ore_common_img = Image.load_from_file("res://sprites/ore_common.png")
-	var ore_uncommon_img = Image.load_from_file("res://sprites/ore_uncommon.png")
-	var ore_rare_img = Image.load_from_file("res://sprites/ore_rare.png")
+	var common_img = Image.load_from_file("res://sprites/asteroid_common.png")
+	var uncommon_img = Image.load_from_file("res://sprites/asteroid_uncommon.png")
+	var rare_img = Image.load_from_file("res://sprites/asteroid_rare.png")
 	
-	ore_icons = {}
-	if ore_common_img:
-		ore_icons["common"] = ImageTexture.create_from_image(ore_common_img)
-	if ore_uncommon_img:
-		ore_icons["uncommon"] = ImageTexture.create_from_image(ore_uncommon_img)
-	if ore_rare_img:
-		ore_icons["rare"] = ImageTexture.create_from_image(ore_rare_img)
+	cargo_icons = {}
+	if common_img:
+		cargo_icons["common"] = ImageTexture.create_from_image(common_img)
+	if uncommon_img:
+		cargo_icons["uncommon"] = ImageTexture.create_from_image(uncommon_img)
+	if rare_img:
+		cargo_icons["rare"] = ImageTexture.create_from_image(rare_img)
 
-func update_display(hull: int, max_hull: int, _fuel: int, _max_fuel: int, credits: int, sector_name: String):
+func update_display(hull: int, max_hull: int, _fuel: int, _max_fuel: int, _credits: int, _sector_name: String):
 	_update_hull_pips(hull, max_hull)
-	_update_credits(credits)
-	_update_sector(sector_name)
 
 func _update_hull_pips(current: int, maximum: int):
 	for child in hull_pips.get_children():
 		child.queue_free()
 	
-	var start_x = 25
-	var start_y = 290
-	var pip_size = 10
-	var spacing = 12
+	var start_x = 82
+	var start_y = 37
+	var pip_size = 8
+	var spacing = 11
 	
 	for i in range(maximum):
 		var pip = ColorRect.new()
@@ -51,20 +47,14 @@ func _update_hull_pips(current: int, maximum: int):
 		pip.color = Color(0, 1, 0, 1) if i < current else Color(0.2, 0.3, 0.2, 1)
 		hull_pips.add_child(pip)
 
-func _update_credits(amount: int):
-	credits_label.text = str(amount).pad_zeros(7)
-
-func _update_sector(name: String):
-	sector_label.text = name
-
 func update_cargo(cargo_grid):
 	for child in cargo_slots.get_children():
 		child.queue_free()
 	
-	var start_x = 1135
-	var start_y = 120
-	var slot_size = 40
-	var spacing = 45
+	var start_x = 1098
+	var start_y = 128
+	var slot_size = 37
+	var spacing = 43
 	var cols = 3
 	
 	for i in range(cargo_grid.slots.size()):
@@ -76,9 +66,9 @@ func update_cargo(cargo_grid):
 		var y = start_y + (row * spacing)
 		
 		if slot.ore_type != "":
-			var icon = TextureRect.new()
-			icon.texture = ore_icons.get(slot.ore_type)
-			icon.position = Vector2(x, y)
-			icon.custom_minimum_size = Vector2(slot_size, slot_size)
-			icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+			var icon = Sprite2D.new()
+			icon.texture = cargo_icons.get(slot.ore_type)
+			icon.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+			icon.position = Vector2(x + slot_size/2, y + slot_size/2)
+			icon.scale = Vector2(slot_size / 128.0, slot_size / 128.0)
 			cargo_slots.add_child(icon)
