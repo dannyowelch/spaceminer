@@ -1,4 +1,4 @@
-[gd_scene load_steps=3 format=3 uid="uid://g5h6i7j8k9l0m"]
+[gd_scene load_steps=3 format=3 uid="uid://dw0ct8doje5fa"]
 
 [ext_resource type="Script" path="res://pirate.gd" id="1_pirate"]
 [ext_resource type="Texture2D" path="res://sprites/pirate.png" id="2_texture"]
