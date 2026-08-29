@@ -15,6 +15,7 @@ var mining_power: int = 3
 var cargo_capacity: int = 12
 var has_weapon: bool = false
 var weapon_damage: int = 2
+var scanner_complexity: int = 1
 
 var asteroids: Array = []
 var pirate = null
@@ -91,7 +92,7 @@ func _process(_delta):
 			if pirate:
 				world_objects.append(pirate)
 			
-			hud.update_radar(player_ship.position, world_objects, SCANNER_RANGE)
+			hud.update_radar(player_ship.position, world_objects, SCANNER_RANGE, scanner_complexity)
 
 func _start_dust_belt():
 	mode = Mode.DUST_BELT

@@ -105,7 +105,7 @@ func update_cargo(cargo_grid):
 		qty_label.text = "x%d" % item.amount
 		cargo_list.add_child(qty_label)
 
-func update_radar(player_pos: Vector2, world_objects: Array, scanner_range: float):
+func update_radar(player_pos: Vector2, world_objects: Array, scanner_range: float, scanner_complexity: int):
 	for child in radar_dots.get_children():
 		child.queue_free()
 	
@@ -121,21 +121,33 @@ func update_radar(player_pos: Vector2, world_objects: Array, scanner_range: floa
 		var distance = offset.length()
 		
 		if distance <= scanner_range and distance > 1:
+			var is_station_or_planet = obj.is_in_group("station") or obj.is_in_group("planet")
+			var is_asteroid = obj.is_in_group("asteroid")
+			var is_enemy = obj.is_in_group("enemy")
+			
+			if is_enemy and scanner_complexity < 2:
+				continue
+			
+			if not is_station_or_planet and not is_asteroid and not is_enemy:
+				continue
+			
 			var radar_offset = offset * world_to_radar_scale
+			
+			if radar_offset.length() > radar_radius:
+				radar_offset = radar_offset.normalized() * radar_radius
+			
 			var dot_pos = radar_center + radar_offset
 			
 			var dot = ColorRect.new()
 			dot.position = dot_pos - Vector2(2, 2)
 			dot.size = Vector2(4, 4)
 			
-			if obj.is_in_group("station") or obj.is_in_group("planet"):
+			if is_station_or_planet:
 				dot.color = Color(0, 1, 1, 1)
-			elif obj.is_in_group("asteroid"):
+			elif is_asteroid:
 				dot.color = Color(0, 1, 0, 1)
-			elif obj.is_in_group("enemy"):
+			elif is_enemy:
 				dot.color = Color(1, 0, 0, 1)
-			else:
-				dot.color = Color(0.5, 0.5, 0.5, 1)
 			
 			radar_dots.add_child(dot)
 	
