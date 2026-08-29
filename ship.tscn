@@ -11,5 +11,6 @@ texture = ExtResource("2_texture")
 
 [node name="MiningBeam" type="Line2D" parent="."]
 visible = false
+z_index = 1
 width = 2.0
 default_color = Color(1, 1, 0, 0.8)

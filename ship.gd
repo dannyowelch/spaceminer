@@ -61,11 +61,9 @@ func get_facing() -> Vector2:
 
 func _update_mining_beam():
 	mining_beam.visible = true
-	var scoop_local = get_facing() * 64.0
-	var beam_end_local = scoop_local + get_facing() * mining_beam_length
 	mining_beam.clear_points()
-	mining_beam.add_point(scoop_local)
-	mining_beam.add_point(beam_end_local)
+	mining_beam.add_point(Vector2(0, -64))
+	mining_beam.add_point(Vector2(0, -184))
 
 func _fire_weapon():
 	if main_ref and main_ref.audio:
