@@ -28,33 +28,17 @@ func _ready():
 	if rare_img:
 		cargo_icons["rare"] = ImageTexture.create_from_image(rare_img)
 
-func update_display(hull: int, max_hull: int, _fuel: int, _max_fuel: int, _credits: int, _sector_name: String):
-	_update_hull_pips(hull, max_hull)
-
-func _update_hull_pips(current: int, maximum: int):
-	for child in hull_pips.get_children():
-		child.queue_free()
-	
-	var start_x = 82
-	var start_y = 37
-	var pip_size = 8
-	var spacing = 11
-	
-	for i in range(maximum):
-		var pip = ColorRect.new()
-		pip.custom_minimum_size = Vector2(pip_size, pip_size)
-		pip.position = Vector2(start_x + (i * spacing), start_y)
-		pip.color = Color(0, 1, 0, 1) if i < current else Color(0.2, 0.3, 0.2, 1)
-		hull_pips.add_child(pip)
+func update_display(_hull: int, _max_hull: int, _fuel: int, _max_fuel: int, _credits: int, _sector_name: String):
+	pass
 
 func update_cargo(cargo_grid):
 	for child in cargo_slots.get_children():
 		child.queue_free()
 	
-	var start_x = 1098
-	var start_y = 128
-	var slot_size = 37
-	var spacing = 43
+	var start_x = 1097
+	var start_y = 116
+	var slot_size = 36
+	var spacing = 44
 	var cols = 3
 	
 	for i in range(cargo_grid.slots.size()):
@@ -70,5 +54,5 @@ func update_cargo(cargo_grid):
 			icon.texture = cargo_icons.get(slot.ore_type)
 			icon.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 			icon.position = Vector2(x + slot_size/2, y + slot_size/2)
-			icon.scale = Vector2(slot_size / 128.0, slot_size / 128.0)
+			icon.scale = Vector2(slot_size / 96.0, slot_size / 96.0)
 			cargo_slots.add_child(icon)
