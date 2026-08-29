@@ -35,10 +35,10 @@ func update_cargo(cargo_grid):
 	for child in cargo_slots.get_children():
 		child.queue_free()
 	
-	var slot_top_left_x = 1023
-	var slot_top_left_y = 143
+	var slot_top_left_x = 1010
+	var slot_top_left_y = 158
 	var slot_size = 48
-	var spacing = 62
+	var spacing = 72
 	var cols = 3
 	
 	var offset = slot_size / 2
