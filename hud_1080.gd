@@ -4,9 +4,7 @@ var main_ref: Node = null
 var cargo_icons: Dictionary = {}
 var map_visible: bool = false
 
-@onready var sector_label: Label = $SectorLabel
-@onready var hull_label: Label = $HullLabel
-@onready var fuel_label: Label = $FuelLabel
+@onready var overlay: Sprite2D = $Overlay
 @onready var credits_label: Label = $CreditsLabel
 @onready var radar_dots: Node2D = $RadarDots
 @onready var cargo_list: Node2D = $CargoList
@@ -15,17 +13,33 @@ var map_visible: bool = false
 @onready var razor_reach_node: ColorRect = $GalacticMap/RazorReachNode
 
 func _ready():
-	var common_img = Image.load_from_file("res://sprites/asteroid_common.png")
-	var uncommon_img = Image.load_from_file("res://sprites/asteroid_uncommon.png")
-	var rare_img = Image.load_from_file("res://sprites/asteroid_rare.png")
+	var overlay_img = Image.load_from_file("res://sprites/hud_overlay.png")
+	if overlay_img:
+		overlay.texture = ImageTexture.create_from_image(overlay_img)
+		overlay.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	
+	var ore_common_img = Image.load_from_file("res://sprites/ore_common.png")
+	var ore_uncommon_img = Image.load_from_file("res://sprites/ore_uncommon.png")
+	var ore_rare_img = Image.load_from_file("res://sprites/ore_rare.png")
 	
 	cargo_icons = {}
-	if common_img:
-		cargo_icons["common"] = ImageTexture.create_from_image(common_img)
-	if uncommon_img:
-		cargo_icons["uncommon"] = ImageTexture.create_from_image(uncommon_img)
-	if rare_img:
-		cargo_icons["rare"] = ImageTexture.create_from_image(rare_img)
+	if ore_common_img:
+		cargo_icons["common"] = ImageTexture.create_from_image(ore_common_img)
+	if ore_uncommon_img:
+		cargo_icons["uncommon"] = ImageTexture.create_from_image(ore_uncommon_img)
+	if ore_rare_img:
+		cargo_icons["rare"] = ImageTexture.create_from_image(ore_rare_img)
+	
+	if not ore_common_img:
+		var common_img = Image.load_from_file("res://sprites/asteroid_common.png")
+		var uncommon_img = Image.load_from_file("res://sprites/asteroid_uncommon.png")
+		var rare_img = Image.load_from_file("res://sprites/asteroid_rare.png")
+		if common_img:
+			cargo_icons["common"] = ImageTexture.create_from_image(common_img)
+		if uncommon_img:
+			cargo_icons["uncommon"] = ImageTexture.create_from_image(uncommon_img)
+		if rare_img:
+			cargo_icons["rare"] = ImageTexture.create_from_image(rare_img)
 
 func _process(_delta):
 	if Input.is_action_just_pressed("toggle_map"):
@@ -53,10 +67,7 @@ func _input(event):
 				galactic_map.visible = false
 
 func update_display(hull: int, max_hull: int, fuel: int, max_fuel: int, credits: int, sector_name: String):
-	hull_label.text = "HULL: %d/%d" % [hull, max_hull]
-	fuel_label.text = "FUEL: %d/%d" % [fuel, max_fuel]
-	credits_label.text = "CREDITS: %d" % credits
-	sector_label.text = "SECTOR: %s" % sector_name
+	credits_label.text = "%07d" % credits
 
 func update_cargo(cargo_grid):
 	for child in cargo_list.get_children():
@@ -87,21 +98,21 @@ func update_cargo(cargo_grid):
 			var icon = Sprite2D.new()
 			icon.texture = cargo_icons[item.ore_type]
 			icon.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
-			icon.position = Vector2(1650, y_pos)
-			icon.scale = Vector2(0.4, 0.4)
+			icon.position = Vector2(1640, y_pos)
+			icon.scale = Vector2(1.0, 1.0)
 			cargo_list.add_child(icon)
 		
 		var name_label = Label.new()
-		name_label.position = Vector2(1690, y_pos - 10)
+		name_label.position = Vector2(1670, y_pos - 12)
 		name_label.add_theme_color_override("font_color", Color(1, 1, 1, 1))
-		name_label.add_theme_font_size_override("font_size", 14)
+		name_label.add_theme_font_size_override("font_size", 12)
 		name_label.text = item.ore_type.to_upper()
 		cargo_list.add_child(name_label)
 		
 		var qty_label = Label.new()
-		qty_label.position = Vector2(1850, y_pos - 10)
-		qty_label.add_theme_color_override("font_color", Color(0, 1, 0, 1))
-		qty_label.add_theme_font_size_override("font_size", 14)
+		qty_label.position = Vector2(1850, y_pos - 12)
+		qty_label.add_theme_color_override("font_color", Color(1, 1, 1, 1))
+		qty_label.add_theme_font_size_override("font_size", 12)
 		qty_label.text = "x%d" % item.amount
 		cargo_list.add_child(qty_label)
 

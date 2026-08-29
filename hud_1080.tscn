@@ -6,175 +6,28 @@
 layer = 100
 script = ExtResource("1")
 
-[node name="LeftHUD" type="ColorRect" parent="."]
-offset_left = 0.0
-offset_top = 0.0
-offset_right = 280.0
-offset_bottom = 1080.0
-color = Color(0.1, 0.1, 0.15, 1)
-
-[node name="LeftHUDBorder" type="ColorRect" parent="."]
-offset_left = 278.0
-offset_top = 0.0
-offset_right = 280.0
-offset_bottom = 1080.0
-color = Color(0.8, 0.8, 0, 1)
-
-[node name="SectorLabel" type="Label" parent="."]
-offset_left = 10.0
-offset_top = 10.0
-offset_right = 270.0
-offset_bottom = 40.0
-theme_override_colors/font_color = Color(1, 1, 0, 1)
-theme_override_font_sizes/font_size = 20
-text = "SECTOR: DUST BELT"
-
-[node name="HullLabel" type="Label" parent="."]
-offset_left = 10.0
-offset_top = 60.0
-offset_right = 270.0
-offset_bottom = 90.0
-theme_override_colors/font_color = Color(0, 1, 0, 1)
-theme_override_font_sizes/font_size = 18
-text = "HULL: 10/10"
-
-[node name="FuelLabel" type="Label" parent="."]
-offset_left = 10.0
-offset_top = 100.0
-offset_right = 270.0
-offset_bottom = 130.0
-theme_override_colors/font_color = Color(0, 1, 1, 1)
-theme_override_font_sizes/font_size = 18
-text = "FUEL: 100/100"
-
-[node name="CreditsLabel" type="Label" parent="."]
-offset_left = 10.0
-offset_top = 140.0
-offset_right = 270.0
-offset_bottom = 170.0
-theme_override_colors/font_color = Color(1, 1, 0, 1)
-theme_override_font_sizes/font_size = 18
-text = "CREDITS: 0"
-
-[node name="RadarBG" type="ColorRect" parent="."]
-offset_left = 20.0
-offset_top = 800.0
-offset_right = 260.0
-offset_bottom = 1040.0
-color = Color(0, 0.05, 0.1, 1)
-
-[node name="RadarBorder" type="ColorRect" parent="."]
-offset_left = 20.0
-offset_top = 800.0
-offset_right = 260.0
-offset_bottom = 802.0
-color = Color(0, 1, 0, 1)
-
-[node name="RadarBorder2" type="ColorRect" parent="."]
-offset_left = 20.0
-offset_top = 1038.0
-offset_right = 260.0
-offset_bottom = 1040.0
-color = Color(0, 1, 0, 1)
-
-[node name="RadarBorder3" type="ColorRect" parent="."]
-offset_left = 20.0
-offset_top = 800.0
-offset_right = 22.0
-offset_bottom = 1040.0
-color = Color(0, 1, 0, 1)
-
-[node name="RadarBorder4" type="ColorRect" parent="."]
-offset_left = 258.0
-offset_top = 800.0
-offset_right = 260.0
-offset_bottom = 1040.0
-color = Color(0, 1, 0, 1)
-
-[node name="RadarLabel" type="Label" parent="."]
-offset_left = 30.0
-offset_top = 770.0
-offset_right = 150.0
-offset_bottom = 795.0
-theme_override_colors/font_color = Color(0, 1, 0, 1)
-theme_override_font_sizes/font_size = 16
-text = "RADAR"
-
 [node name="RadarDots" type="Node2D" parent="."]
-
-[node name="RightHUD" type="ColorRect" parent="."]
-offset_left = 1600.0
-offset_top = 0.0
-offset_right = 1920.0
-offset_bottom = 1080.0
-color = Color(0.1, 0.1, 0.15, 1)
-
-[node name="RightHUDBorder" type="ColorRect" parent="."]
-offset_left = 1600.0
-offset_top = 0.0
-offset_right = 1602.0
-offset_bottom = 1080.0
-color = Color(0.8, 0.8, 0, 1)
-
-[node name="CargoTitle" type="Label" parent="."]
-offset_left = 1620.0
-offset_top = 10.0
-offset_right = 1900.0
-offset_bottom = 40.0
-theme_override_colors/font_color = Color(1, 1, 0, 1)
-theme_override_font_sizes/font_size = 20
-text = "CARGO HOLD"
-
-[node name="CargoListBG" type="ColorRect" parent="."]
-offset_left = 1620.0
-offset_top = 108.0
-offset_right = 1900.0
-offset_bottom = 864.0
-color = Color(0, 0.05, 0.1, 1)
-
-[node name="CargoListBorder" type="ColorRect" parent="."]
-offset_left = 1620.0
-offset_top = 108.0
-offset_right = 1900.0
-offset_bottom = 110.0
-color = Color(1, 1, 0, 1)
-
-[node name="CargoListBorder2" type="ColorRect" parent="."]
-offset_left = 1620.0
-offset_top = 862.0
-offset_right = 1900.0
-offset_bottom = 864.0
-color = Color(1, 1, 0, 1)
-
-[node name="CargoListBorder3" type="ColorRect" parent="."]
-offset_left = 1620.0
-offset_top = 108.0
-offset_right = 1622.0
-offset_bottom = 864.0
-color = Color(1, 1, 0, 1)
-
-[node name="CargoListBorder4" type="ColorRect" parent="."]
-offset_left = 1898.0
-offset_top = 108.0
-offset_right = 1900.0
-offset_bottom = 864.0
-color = Color(1, 1, 0, 1)
+z_index = 101
 
 [node name="CargoList" type="Node2D" parent="."]
+z_index = 101
 
-[node name="PlayfieldBorderTop" type="ColorRect" parent="."]
-offset_left = 280.0
-offset_top = 38.0
-offset_right = 1600.0
-offset_bottom = 40.0
-color = Color(0.8, 0.8, 0, 1)
+[node name="CreditsLabel" type="Label" parent="."]
+offset_left = 735.0
+offset_top = 5.0
+offset_right = 1185.0
+offset_bottom = 35.0
+theme_override_colors/font_color = Color(1, 1, 0, 1)
+theme_override_font_sizes/font_size = 20
+text = "0000000"
+horizontal_alignment = 2
+z_index = 101
 
-[node name="PlayfieldBorderBottom" type="ColorRect" parent="."]
-offset_left = 280.0
-offset_top = 1040.0
-offset_right = 1600.0
-offset_bottom = 1042.0
-color = Color(0.8, 0.8, 0, 1)
+[node name="Overlay" type="Sprite2D" parent="."]
+z_index = 100
+texture_filter = 1
+centered = false
+position = Vector2(0, 0)
 
 [node name="GalacticMap" type="ColorRect" parent="."]
 visible = false
@@ -183,6 +36,7 @@ offset_top = 240.0
 offset_right = 1360.0
 offset_bottom = 840.0
 color = Color(0, 0, 0.1, 0.95)
+z_index = 102
 
 [node name="MapTitle" type="Label" parent="GalacticMap"]
 offset_left = 10.0

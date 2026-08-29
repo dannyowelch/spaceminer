@@ -8,11 +8,6 @@
 [node name="Main" type="Node2D"]
 script = ExtResource("1_1q2w3")
 
-[node name="Starfield" type="Sprite2D" parent="."]
-texture_filter = 1
-position = Vector2(960, 540)
-texture = ExtResource("2_starfield")
-
 [node name="PlayfieldClip" type="SubViewportContainer" parent="."]
 offset_left = 280.0
 offset_top = 40.0
@@ -28,8 +23,11 @@ render_target_update_mode = 4
 [node name="Camera2D" type="Camera2D" parent="PlayfieldClip/SubViewport"]
 position = Vector2(660, 500)
 
+[node name="StarfieldLayer" type="Node2D" parent="PlayfieldClip/SubViewport"]
+z_index = -100
+
 [node name="Playfield" type="Node2D" parent="PlayfieldClip/SubViewport"]
 
-[node name="HUD_1080" parent="." instance=ExtResource("3_hud")]
-
 [node name="AudioManager" parent="." instance=ExtResource("4_audio")]
+
+[node name="HUD_1080" parent="." instance=ExtResource("3_hud")]

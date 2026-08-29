@@ -29,8 +29,9 @@ const SCANNER_RANGE: float = 900.0
 @onready var playfield: Node2D = $PlayfieldClip/SubViewport/Playfield
 @onready var camera: Camera2D = $PlayfieldClip/SubViewport/Camera2D
 @onready var audio: Node = $AudioManager
-@onready var starfield: Sprite2D = $Starfield
+@onready var starfield_layer: Node2D = $PlayfieldClip/SubViewport/StarfieldLayer
 var planet: Sprite2D
+var starfield_tiles: Array = []
 
 var dustbelt_music: AudioStream
 var razor_music: AudioStream
@@ -39,13 +40,7 @@ var starbase_music: AudioStream
 func _ready():
 	Input.set_mouse_mode(Input.MOUSE_MODE_HIDDEN)
 	
-	var starfield_img = Image.load_from_file("res://sprites/starfield.png")
-	if starfield_img == null:
-		push_error("Failed to load starfield.png")
-	else:
-		var starfield_texture = ImageTexture.create_from_image(starfield_img)
-		starfield.texture = starfield_texture
-		starfield.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	_create_tiled_starfield()
 	
 	var CargoGridClass = load("res://cargo_grid.gd")
 	cargo_grid = CargoGridClass.new()
@@ -57,9 +52,38 @@ func _ready():
 	
 	_start_dust_belt()
 
+func _create_tiled_starfield():
+	var starfield_path = "res://sprites/starfield_tile.png"
+	if not FileAccess.file_exists(starfield_path):
+		starfield_path = "res://sprites/starfield.png"
+	
+	var starfield_img = Image.load_from_file(starfield_path)
+	if starfield_img == null:
+		push_error("Failed to load starfield")
+		return
+	
+	var starfield_texture = ImageTexture.create_from_image(starfield_img)
+	var tile_size = Vector2(starfield_img.get_width(), starfield_img.get_height())
+	
+	var tiles_x = ceili(WORLD_WIDTH / tile_size.x) + 1
+	var tiles_y = ceili(WORLD_HEIGHT / tile_size.y) + 1
+	
+	for ty in range(tiles_y):
+		for tx in range(tiles_x):
+			var tile = Sprite2D.new()
+			tile.texture = starfield_texture
+			tile.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+			tile.position = Vector2(tx * tile_size.x, ty * tile_size.y)
+			tile.centered = false
+			starfield_layer.add_child(tile)
+			starfield_tiles.append(tile)
+
 func _process(_delta):
 	if player_ship and camera:
 		camera.position = player_ship.position
+		
+		if starfield_layer:
+			starfield_layer.position = player_ship.position * 0.2
 	
 	if mode == Mode.DUST_BELT:
 		_check_starbase_proximity()
