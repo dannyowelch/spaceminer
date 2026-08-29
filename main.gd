@@ -73,7 +73,8 @@ func _start_dust_belt():
 		audio.play_music(dustbelt_music)
 	
 	planet = Sprite2D.new()
-	planet.texture = load("res://sprites/planet_256.png")
+	planet.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	planet.texture = load("res://sprites/planet.png")
 	planet.position = Vector2(150, 360)
 	planet.z_index = -5
 	playfield.add_child(planet)

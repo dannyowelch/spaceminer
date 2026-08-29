@@ -1,7 +1,7 @@
 [gd_scene load_steps=5 format=3 uid="uid://bvq8ixmxl1r5x"]
 
 [ext_resource type="Script" path="res://main.gd" id="1_1q2w3"]
-[ext_resource type="Texture2D" path="res://ui/starfield.png" id="2_starfield"]
+[ext_resource type="Texture2D" path="res://sprites/starfield.png" id="2_starfield"]
 [ext_resource type="PackedScene" path="res://vga_hud.tscn" id="3_hud"]
 [ext_resource type="PackedScene" path="res://audio_manager.tscn" id="4_audio"]
 
@@ -9,6 +9,7 @@
 script = ExtResource("1_1q2w3")
 
 [node name="Starfield" type="Sprite2D" parent="."]
+texture_filter = 1
 position = Vector2(640, 360)
 texture = ExtResource("2_starfield")
 
