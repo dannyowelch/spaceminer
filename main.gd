@@ -15,20 +15,33 @@ var mining_power: int = 3
 var cargo_capacity: int = 12
 var has_weapon: bool = false
 var weapon_damage: int = 2
+var scanner_complexity: int = 1
 
 var asteroids: Array = []
 var pirate = null
 var starbase = null
 
-@onready var hud = $HUD
-@onready var playfield: Node2D = $Playfield
+const WORLD_WIDTH: float = 5280.0
+const WORLD_HEIGHT: float = 4000.0
+const SCANNER_RANGE: float = 900.0
+
+@onready var hud = $HUD_1080
+@onready var playfield: Node2D = $PlayfieldClip/SubViewport/Playfield
+@onready var camera: Camera2D = $PlayfieldClip/SubViewport/Camera2D
 @onready var audio: Node = $AudioManager
+@onready var starfield_layer: Node2D = $PlayfieldClip/SubViewport/StarfieldLayer
+var planet: Sprite2D
+var starfield_tiles: Array = []
 
 var dustbelt_music: AudioStream
 var razor_music: AudioStream
 var starbase_music: AudioStream
 
 func _ready():
+	Input.set_mouse_mode(Input.MOUSE_MODE_HIDDEN)
+	
+	_create_tiled_starfield()
+	
 	var CargoGridClass = load("res://cargo_grid.gd")
 	cargo_grid = CargoGridClass.new()
 	cargo_grid.initialize(cargo_capacity)
@@ -39,13 +52,67 @@ func _ready():
 	
 	_start_dust_belt()
 
+func _create_tiled_starfield():
+	var starfield_img = Image.load_from_file("res://sprites/starfield_tile.png")
+	if starfield_img == null:
+		push_error("Failed to load starfield")
+		return
+	
+	var starfield_texture = ImageTexture.create_from_image(starfield_img)
+	var tile_size = Vector2(starfield_img.get_width(), starfield_img.get_height())
+	
+	var tiles_x = ceili(WORLD_WIDTH / tile_size.x) + 1
+	var tiles_y = ceili(WORLD_HEIGHT / tile_size.y) + 1
+	
+	for ty in range(tiles_y):
+		for tx in range(tiles_x):
+			var tile = Sprite2D.new()
+			tile.texture = starfield_texture
+			tile.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+			tile.position = Vector2(tx * tile_size.x, ty * tile_size.y)
+			tile.centered = false
+			starfield_layer.add_child(tile)
+			starfield_tiles.append(tile)
+
 func _process(_delta):
+	if player_ship and camera:
+		camera.position = player_ship.position
+		
+		if starfield_layer:
+			starfield_layer.position = player_ship.position * 0.2
+	
 	if mode == Mode.DUST_BELT:
 		_check_starbase_proximity()
 	elif mode == Mode.RAZOR_REACH:
 		_check_pirate_state()
 	
-	hud.update_display(hull, max_hull, fuel, max_fuel, credits, cargo_grid.get_filled_slots())
+	var sector_name = ""
+	match mode:
+		Mode.DUST_BELT:
+			sector_name = "DUST BELT"
+		Mode.DOCK:
+			sector_name = "STARBASE"
+		Mode.RAZOR_REACH:
+			sector_name = "RAZOR REACH"
+	
+	if hud:
+		hud.main_ref = self
+		hud.update_display(hull, max_hull, fuel, max_fuel, credits, sector_name)
+		hud.update_cargo(cargo_grid)
+		
+		if player_ship and (mode == Mode.DUST_BELT or mode == Mode.RAZOR_REACH):
+			var world_objects = []
+			if starbase:
+				world_objects.append(starbase)
+			if planet:
+				world_objects.append(planet)
+			for asteroid in asteroids:
+				if is_instance_valid(asteroid):
+					world_objects.append(asteroid)
+			if pirate:
+				world_objects.append(pirate)
+			
+			hud.update_radar(player_ship.position, world_objects, SCANNER_RANGE, scanner_complexity)
 
 func _start_dust_belt():
 	mode = Mode.DUST_BELT
@@ -54,23 +121,55 @@ func _start_dust_belt():
 	if audio:
 		audio.play_music(dustbelt_music)
 	
+	planet = Sprite2D.new()
+	planet.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	
+	var planet_img = Image.load_from_file("res://sprites/planet.png")
+	if planet_img == null:
+		push_error("Failed to load planet.png")
+	else:
+		planet.texture = ImageTexture.create_from_image(planet_img)
+	
+	planet.position = Vector2(500, 2000)
+	planet.z_index = -5
+	planet.add_to_group("planet")
+	playfield.add_child(planet)
+	
 	player_ship = preload("res://ship.tscn").instantiate()
-	player_ship.position = Vector2(640, 360)
+	player_ship.position = Vector2(WORLD_WIDTH / 2, WORLD_HEIGHT / 2)
 	player_ship.main_ref = self
 	playfield.add_child(player_ship)
 	
 	starbase = preload("res://starbase.tscn").instantiate()
-	starbase.position = Vector2(640, 180)
+	starbase.position = Vector2(WORLD_WIDTH / 2, 1200)
+	starbase.add_to_group("station")
 	playfield.add_child(starbase)
 	
-	for i in range(15):
-		var asteroid = preload("res://asteroid.tscn").instantiate()
-		var angle = randf() * TAU
-		var distance = randf_range(200, 500)
-		asteroid.position = Vector2(640, 360) + Vector2(cos(angle), sin(angle)) * distance
-		asteroid.rarity = _random_rarity()
-		playfield.add_child(asteroid)
-		asteroids.append(asteroid)
+	var num_clumps = randi_range(4, 6)
+	var asteroids_per_clump = 8
+	
+	for clump_idx in range(num_clumps):
+		var clump_center = Vector2(
+			randf_range(800, WORLD_WIDTH - 800),
+			randf_range(800, WORLD_HEIGHT - 800)
+		)
+		
+		var dist_to_spawn = clump_center.distance_to(player_ship.position)
+		if dist_to_spawn < 600:
+			continue
+		
+		for i in range(asteroids_per_clump):
+			var asteroid = preload("res://asteroid.tscn").instantiate()
+			var offset = Vector2(
+				randf_range(-300, 300),
+				randf_range(-300, 300)
+			)
+			asteroid.position = clump_center + offset
+			asteroid.rarity = _random_rarity()
+			asteroid.size = _random_size()
+			asteroid.add_to_group("asteroid")
+			playfield.add_child(asteroid)
+			asteroids.append(asteroid)
 
 func _start_dock():
 	mode = Mode.DOCK
@@ -93,13 +192,14 @@ func _start_razor_reach():
 		audio.play_sfx("pirate_sting")
 	
 	player_ship = preload("res://ship.tscn").instantiate()
-	player_ship.position = Vector2(640, 360)
+	player_ship.position = Vector2(WORLD_WIDTH / 2, WORLD_HEIGHT / 2)
 	player_ship.main_ref = self
 	playfield.add_child(player_ship)
 	
 	pirate = preload("res://pirate.tscn").instantiate()
-	pirate.position = Vector2(640, 200)
+	pirate.position = Vector2(WORLD_WIDTH / 2, 1200)
 	pirate.main_ref = self
+	pirate.add_to_group("enemy")
 	playfield.add_child(pirate)
 
 func _clear_playfield():
@@ -120,8 +220,8 @@ func _check_pirate_state():
 		_victory_razor_reach()
 	
 	if player_ship:
-		var distance = player_ship.position.distance_to(Vector2(640, 360))
-		if distance > 800:
+		var distance = player_ship.position.distance_to(Vector2(480, 360))
+		if distance > 600:
 			_escape_razor_reach()
 
 func _victory_razor_reach():
@@ -135,23 +235,53 @@ func try_mine():
 	if mode != Mode.DUST_BELT or not player_ship:
 		return
 	
+	var scoop_pos = player_ship.get_scoop_position()
+	var facing = player_ship.get_facing()
+	var beam_end = scoop_pos + facing * mining_range
+	
+	var closest_asteroid = null
+	var closest_distance = INF
+	
 	for asteroid in asteroids:
 		if not is_instance_valid(asteroid):
 			continue
-		var distance = player_ship.position.distance_to(asteroid.position)
-		if distance < mining_range:
+		
+		var hit = _line_intersects_circle(scoop_pos, beam_end, asteroid.position, asteroid.get_radius())
+		if hit:
+			var distance = scoop_pos.distance_to(asteroid.position)
+			if distance < closest_distance:
+				closest_distance = distance
+				closest_asteroid = asteroid
+	
+	if closest_asteroid:
+		if audio:
+			audio.play_sfx("mine")
+		var mined = closest_asteroid.mine(mining_power)
+		if mined > 0:
+			cargo_grid.add_ore(closest_asteroid.rarity, mined)
 			if audio:
-				audio.play_sfx("mine")
-			var mined = asteroid.mine(mining_power)
-			if mined > 0:
-				cargo_grid.add_ore(asteroid.rarity, mined)
-				if audio:
-					audio.play_sfx("ore_pickup")
-			if asteroid.ore_remaining <= 0:
-				if audio:
-					audio.play_sfx("asteroid_break")
-				asteroids.erase(asteroid)
-			break
+				audio.play_sfx("ore_pickup")
+		if closest_asteroid.ore_remaining <= 0:
+			if audio:
+				audio.play_sfx("asteroid_break")
+			asteroids.erase(closest_asteroid)
+
+func _line_intersects_circle(line_start: Vector2, line_end: Vector2, circle_pos: Vector2, circle_radius: float) -> bool:
+	var d = line_end - line_start
+	var f = line_start - circle_pos
+	
+	var a = d.dot(d)
+	var b = 2 * f.dot(d)
+	var c = f.dot(f) - circle_radius * circle_radius
+	
+	var discriminant = b * b - 4 * a * c
+	if discriminant < 0:
+		return false
+	
+	var t1 = (-b - sqrt(discriminant)) / (2 * a)
+	var t2 = (-b + sqrt(discriminant)) / (2 * a)
+	
+	return (t1 >= 0 and t1 <= 1) or (t2 >= 0 and t2 <= 1)
 
 func sell_all_ore() -> int:
 	var total = 0
@@ -202,3 +332,12 @@ func _random_rarity() -> String:
 		return "uncommon"
 	else:
 		return "rare"
+
+func _random_size() -> String:
+	var roll = randf()
+	if roll < 0.4:
+		return "small"
+	elif roll < 0.8:
+		return "medium"
+	else:
+		return "large"

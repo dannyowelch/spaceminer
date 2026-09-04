@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://b3og16s1kxc7w"
-path="res://.godot/imported/asteroid_uncommon.png-f2126543f98bf5be060149f415d6540e.ctex"
+uid="uid://bw125eugg54py"
+path="res://.godot/imported/hud_overlay.png-44e401742bcc60a06f38dcaece346777.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://sprites/asteroid_uncommon.png"
-dest_files=["res://.godot/imported/asteroid_uncommon.png-f2126543f98bf5be060149f415d6540e.ctex"]
+source_file="res://ui/hud_overlay.png"
+dest_files=["res://.godot/imported/hud_overlay.png-44e401742bcc60a06f38dcaece346777.ctex"]
 
 [params]
 

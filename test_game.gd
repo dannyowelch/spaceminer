@@ -39,7 +39,7 @@ func _on_scene_ready():
 func test_dust_belt(scene):
 	assert(scene.mode == 0, "Should start in Dust Belt mode")
 	assert(scene.player_ship != null, "Player ship should exist")
-	assert(scene.asteroids.size() == 15, "Should have 15 asteroids")
+	assert(scene.asteroids.size() == 30, "Should have 30 asteroids")
 	assert(scene.starbase != null, "Starbase should exist")
 	assert(scene.hull == 10, "Hull should be 10")
 	assert(scene.credits == 0, "Starting credits should be 0")

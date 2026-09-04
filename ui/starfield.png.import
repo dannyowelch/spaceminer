@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cxl1tex08jukp"
-path="res://.godot/imported/bullet_pirate.png-7c4f90eedf3b9b9d178a8842110c26ec.ctex"
+uid="uid://ckgpbu28h4tb1"
+path="res://.godot/imported/starfield.png-7c3a49365554c63582ae654e5966c49d.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://sprites/bullet_pirate.png"
-dest_files=["res://.godot/imported/bullet_pirate.png-7c4f90eedf3b9b9d178a8842110c26ec.ctex"]
+source_file="res://ui/starfield.png"
+dest_files=["res://.godot/imported/starfield.png-7c3a49365554c63582ae654e5966c49d.ctex"]
 
 [params]
 

@@ -1,0 +1,21 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://vga_hud.gd" id="1"]
+[ext_resource type="Texture2D" path="res://sprites/hud_overlay.png" id="2"]
+
+[node name="VGA_HUD" type="CanvasLayer"]
+layer = 100
+script = ExtResource("1")
+
+[node name="Overlay" type="Sprite2D" parent="."]
+texture_filter = 1
+centered = false
+z_index = 100
+position = Vector2(0, 0)
+texture = ExtResource("2")
+
+[node name="HullPips" type="Node2D" parent="."]
+z_index = 101
+
+[node name="CargoSlots" type="Node2D" parent="."]
+z_index = 101

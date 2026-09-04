@@ -1,4 +1,4 @@
-[gd_scene load_steps=3 format=3 uid="uid://d1e2f3g4h5i6j"]
+[gd_scene load_steps=3 format=3 uid="uid://dhon1n8esriu6"]
 
 [ext_resource type="Script" path="res://ship.gd" id="1_ship"]
 [ext_resource type="Texture2D" path="res://sprites/ship.png" id="2_texture"]
@@ -7,4 +7,11 @@
 script = ExtResource("1_ship")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
+texture_filter = 1
 texture = ExtResource("2_texture")
+
+[node name="MiningBeam" type="Line2D" parent="."]
+visible = false
+z_index = 1
+width = 2.0
+default_color = Color(1, 1, 0, 0.8)
